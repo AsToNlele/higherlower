@@ -1,5 +1,4 @@
-import React, { createContext, useState, useCallback } from 'react'
-import { supabase } from '../utils/supabaseClient'
+import React, { createContext, useState } from 'react'
 
 export const AppContext = createContext()
 
@@ -13,13 +12,6 @@ const AppContextProvider = ({ children }) => {
   const getRandomNumber = (maxVal) => {
     return Math.floor(Math.random() * maxVal)
   }
-
-  const loadVideos = useCallback(async () => {
-    let { data: videos } = await supabase.from('videos').select('*')
-    setAllVideos(videos)
-    setNotPlayedVideos(videos)
-    setCurrentScore(0)
-  }, [])
 
   const pickThreeVideos = async () => {
     let copyNotPlayedVideos = allVideos
@@ -49,8 +41,8 @@ const AppContextProvider = ({ children }) => {
         _currentVideos: [currentVideos, setCurrentVideos],
         _currentScore: [currentScore, setCurrentScore],
         _gameState: [gameState, setGameState],
+        _allVideos: [allVideos, setAllVideos],
         getRandomNumber,
-        loadVideos,
         Restart,
         pickThreeVideos,
       }}

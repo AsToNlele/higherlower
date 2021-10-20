@@ -4,12 +4,15 @@ import SwitchComponents from './components/SwitchComponents'
 import GameScreen from './components/screens/GameScreen'
 import WinScreen from './components/screens/WinScreen'
 import LoseScreen from './components/screens/LoseScreen'
-
 import { AppContext } from './context/AppContext'
+import { supabase } from './utils/supabaseClient'
 
 function App() {
-  const { _gameState, loadVideos, pickThreeVideos } = useContext(AppContext)
+  const { _gameState, _allVideos, _notPlayedVideos, pickThreeVideos } =
+    useContext(AppContext)
   const [gameState, setGameState] = _gameState
+  const [, setAllVideos] = _allVideos
+  const [, setNotPlayedVideos] = _notPlayedVideos
 
   // gameState
   // 0 : Not Started
@@ -17,9 +20,15 @@ function App() {
   // 2 : Win
   // 3 : Lose
 
+  // On Load
   useEffect(() => {
-    loadVideos()
-  }, [loadVideos])
+    const getVideos = async () => {
+      let { data: videos } = await supabase.from('videos').select('*')
+      setAllVideos(videos)
+      setNotPlayedVideos(videos)
+    }
+    getVideos()
+  }, [])
 
   const startGame = () => {
     pickThreeVideos()
