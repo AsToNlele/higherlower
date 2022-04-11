@@ -5,7 +5,6 @@ import GameScreen from './components/screens/GameScreen'
 import WinScreen from './components/screens/WinScreen'
 import LoseScreen from './components/screens/LoseScreen'
 import { AppContext } from './context/AppContext'
-import { supabase } from './utils/supabaseClient'
 
 function App() {
   const { _gameState, _allVideos, _notPlayedVideos, pickThreeVideos } =
@@ -23,7 +22,8 @@ function App() {
   // On Load
   useEffect(() => {
     const getVideos = async () => {
-      let { data: videos } = await supabase.from('videos').select('*')
+      let videos = await fetch("./videos.json").then( response => response.json())
+      console.log(videos)
       setAllVideos(videos)
       setNotPlayedVideos(videos)
     }
